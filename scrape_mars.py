@@ -8,7 +8,7 @@ def crawler():
     mars_info = {}
     mars_info["article_title"] = article_info[0]
     mars_info["article_description"] = article_info[1]
-    mars_info["featured_image"] = featured_image()
+    mars_info["featured_image"] = mars_featured_image()
     mars_info["weather"] = mars_weather()
     mars_info["facts"] = mars_facts()
     mars_info["hemispheres"] = mars_hemispheres()
@@ -34,11 +34,11 @@ def mars_news():
     return article
 
 
-def featured_image():
+def mars_featured_image():
     r = requests.get("https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars")
     soup = BeautifulSoup(r.text, "html.parser")
-    featured_image = soup.find("a", class_="button fancybox")["data-fancybox-href"]
-    featured_image_url = "https://www.jpl.nasa.gov" + featured_image
+    featured_image = soup.find("article")["style"].split("'")
+    featured_image_url = "https://www.jpl.nasa.gov" + featured_image[1]
     return featured_image_url
 
 
@@ -73,5 +73,5 @@ def mars_hemispheres():
             "https://astrogeology.usgs.gov"
             + soup.find("img", class_="wide-image")["src"]
         )
-        mars_hemisphere_data.append([{"title": title, "img_url": image_url}])
+        mars_hemisphere_data.append({"title": title, "img_url": image_url})
     return mars_hemisphere_data

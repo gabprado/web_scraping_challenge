@@ -10,13 +10,21 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def index():
-    mars_data = mongo.db.mars.find_one()
-    return mars_data
+    mars = mongo.db.mars.find_one()
+    if mars == None:
+        result = redirect("http://localhost:5000/scrape")
+    else:
+        result = render_template("index.html", mars=mars)
+    return result
+
+
 @app.route("/scrape")
 def crawl():
     mars = mongo.db.mars
     mars_data = scrape_mars.crawler()
-    mars.update({}, mars_data, upsert = True)
-    return redirect("http://localhost/5000/")
+    mars.update({}, mars_data, upsert=True)
+    return redirect("http://localhost:5000/")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
