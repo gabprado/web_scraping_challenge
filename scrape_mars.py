@@ -75,3 +75,5 @@ def mars_hemispheres():
         )
         mars_hemisphere_data.append({"title": title, "img_url": image_url})
     return mars_hemisphere_data
+
+print(crawler())
